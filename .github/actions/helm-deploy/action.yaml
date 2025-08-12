@@ -1,0 +1,26 @@
+name: helm-deploy
+description: Deploy via Helm (not used directly in workflow; inline helm used)
+inputs:
+  environment: { required: true }
+  release:     { required: true }
+  chart:       { required: true }
+  namespace:   { required: true }
+  image_repo:  { required: true }
+  image_digest:{ required: true }
+  values_file: { required: true }
+  port:        { required: true }
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        curl -sSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        kubectl version --client
+        helm upgrade --install "${{ inputs.release }}" "${{ inputs.chart }}" \
+          --namespace "${{ inputs.namespace }}" --create-namespace \
+          -f "${{ inputs.values_file }}" \
+          --set app.name="${{ inputs.release }}" \
+          --set app.port="${{ inputs.port }}" \
+          --set image.repository="${{ inputs.image_repo }}" \
+          --set image.digest="${{ inputs.image_digest }}"
+        kubectl -n "${{ inputs.namespace }}" rollout status deploy/${{ inputs.release }} --timeout=180s

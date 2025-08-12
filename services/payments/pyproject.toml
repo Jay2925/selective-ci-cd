@@ -1,0 +1,10 @@
+[project]
+name = "payments"
+version = "0.0.1"
+dependencies = ["flask"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-junitxml", "requests"]
+
+[tool.pytest.ini_options]
+junit_family = "xunit2"

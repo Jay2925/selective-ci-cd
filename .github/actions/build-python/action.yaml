@@ -1,0 +1,22 @@
+name: build-python
+description: Build & test Python project (not used in current workflow, kept for extension)
+inputs:
+  workdir: { required: true }
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with: { python-version: '3.11' }
+    - uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/pyproject.toml', inputs.workdir)) }}
+        restore-keys: pip-${{ runner.os }}-
+    - shell: bash
+      run: |
+        cd "${{ inputs.workdir }}"
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -U pip
+        pip install -e ".[dev]" pytest pytest-junit
+        pytest --junitxml=junit/results.xml

@@ -1,0 +1,16 @@
+components:
+  - id: monolith
+    path: monolith
+    type: java
+    chart: charts/app
+    port: 8080
+  - id: services-users
+    path: services/users
+    type: node
+    chart: charts/app
+    port: 8080
+  - id: services-payments
+    path: services/payments
+    type: python
+    chart: charts/app
+    port: 8080

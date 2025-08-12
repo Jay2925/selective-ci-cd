@@ -1,0 +1,13 @@
+app:
+  name: "app"
+  port: 8080
+  replicas: 1
+
+image:
+  repository: ""
+  digest: ""          # we deploy with repo@sha256:digest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80

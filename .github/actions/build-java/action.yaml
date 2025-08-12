@@ -1,0 +1,17 @@
+name: build-java
+description: Build & test Maven project
+inputs:
+  workdir: { required: true }
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: m2-${{ runner.os }}-${{ hashFiles(format('{0}/pom.xml', inputs.workdir)) }}
+        restore-keys: m2-${{ runner.os }}-
+    - name: Build & Test
+      shell: bash
+      run: |
+        cd "${{ inputs.workdir }}"
+        mvn -B -DskipTests=false clean test package

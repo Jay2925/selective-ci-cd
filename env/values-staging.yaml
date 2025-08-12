@@ -1,0 +1,4 @@
+app:
+  replicas: 2
+image:
+  pullPolicy: IfNotPresent
